@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mermaid PNG Exporter (Icons)</title>
+  <link rel="stylesheet" href="icons.css" />
+</head>
+<body>
+  <header class="toolbar">
+    <h1>Mermaid PNG Exporter (Icons)</h1>
+    <span id="mermaidVersion" class="version"></span>
+
+    <label class="toolbar-field" for="themeSelect">
+      <span>Theme</span>
+      <select id="themeSelect">
+        <option value="redux-color" selected>redux-color</option>
+        <option value="redux-dark-color">redux-dark-color</option>
+        <option value="redux">redux</option>
+        <option value="redux-dark">redux-dark</option>
+        <option value="neo">neo</option>
+        <option value="neo-dark">neo-dark</option>
+        <option value="default">default</option>
+        <option value="neutral">neutral</option>
+        <option value="dark">dark</option>
+        <option value="forest">forest</option>
+        <option value="base">base</option>
+      </select>
+    </label>
+
+    <label class="toolbar-field" for="lookSelect">
+      <span>Look</span>
+      <select id="lookSelect">
+        <option value="neo" selected>neo</option>
+        <option value="classic">classic</option>
+        <option value="handDrawn">handDrawn</option>
+      </select>
+    </label>
+
+    <button type="button" id="btnExport" class="btn-export">Export PNG</button>
+  </header>
+
+  <main class="split">
+    <section class="pane pane-syntax">
+      <label for="syntax" class="pane-label">Syntax</label>
+      <textarea id="syntax" spellcheck="false">flowchart LR
+  subgraph Client
+    UI@{ icon: "fa:desktop", form: "square", label: "Web app", h: 60 }
+    Cache@{ icon: "fa:database", form: "square", label: "Local cache", h: 60 }
+  end
+  subgraph Services
+    API@{ icon: "fa:server", form: "square", label: "API gateway", h: 60 }
+    Auth@{ icon: "fa:lock", form: "square", label: "Auth service", h: 60 }
+    Orders@{ icon: "fa:list", form: "square", label: "Order service", h: 60 }
+  end
+  subgraph Storage
+    DB@{ icon: "fa:database", form: "square", label: "Orders DB", h: 60 }
+  end
+  UI --> API
+  UI --> Cache
+  API --> Auth
+  API --> Orders
+  Orders --> DB
+  Auth -. token .-> UI</textarea>
+    </section>
+
+    <section class="pane pane-preview">
+      <div class="pane-label">Preview</div>
+      <div id="preview" class="preview" aria-label="Mermaid diagram preview"></div>
+      <div id="error" class="error" hidden></div>
+    </section>
+  </main>
+
+  <!-- ESM + Iconify packs; gak nyentuh index.html / app.js -->
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@12.3.0/dist/mermaid.esm.min.mjs";
+
+    function loadIconPack(name, npmPackage) {
+      return {
+        name: name,
+        loader: function () {
+          return fetch(
+            "https://cdn.jsdelivr.net/npm/" + npmPackage + "@1/icons.json"
+          ).then(function (res) {
+            return res.json();
+          });
+        },
+      };
+    }
+
+    mermaid.registerIconPacks([
+      loadIconPack("fa", "@iconify-json/fa"),
+      loadIconPack("fas", "@iconify-json/fa-solid"),
+      loadIconPack("far", "@iconify-json/fa-regular"),
+      loadIconPack("fab", "@iconify-json/fa-brands"),
+      loadIconPack("logos", "@iconify-json/logos"),
+    ]);
+
+    window.mermaid = mermaid;
+    const script = document.createElement("script");
+    script.src = "icons.js";
+    document.body.appendChild(script);
+  </script>
+</body>
+</html>

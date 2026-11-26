@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mermaid PNG Exporter</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="toolbar">
+    <h1>Mermaid PNG Exporter</h1>
+    <span id="mermaidVersion" class="version"></span>
+
+    <label class="toolbar-field" for="themeSelect">
+      <span>Theme</span>
+      <select id="themeSelect">
+        <option value="redux-color" selected>redux-color</option>
+        <option value="redux-dark-color">redux-dark-color</option>
+        <option value="redux">redux</option>
+        <option value="redux-dark">redux-dark</option>
+        <option value="neo">neo</option>
+        <option value="neo-dark">neo-dark</option>
+        <option value="default">default</option>
+        <option value="neutral">neutral</option>
+        <option value="dark">dark</option>
+        <option value="forest">forest</option>
+        <option value="base">base</option>
+      </select>
+    </label>
+
+    <label class="toolbar-field" for="lookSelect">
+      <span>Look</span>
+      <select id="lookSelect">
+        <option value="neo" selected>neo</option>
+        <option value="classic">classic</option>
+        <option value="handDrawn">handDrawn</option>
+      </select>
+    </label>
+
+    <button type="button" id="btnExport" class="btn-export">Export PNG</button>
+  </header>
+
+  <main class="split">
+    <section class="pane pane-syntax">
+      <label for="syntax" class="pane-label">Syntax</label>
+      <textarea id="syntax" spellcheck="false">swimlane-beta TB
+  subgraph client_app [Client Application]
+    start([Start])
+    ca_1[Menyiapkan request upload]
+    ca_2[Menyertakan Idempotency Key]
+    ca_3[Mengirim request ke endpoint upload]
+    approve((Submitted))
+  end
+
+  subgraph flic [FLIC]
+    f_1[Mengautentikasi aplikasi]
+    f_2[Memeriksa Idempotency Key]
+    f_3[Memvalidasi file]
+    f_4[Menghitung hash dan cek dedupe dalam transaction]
+    f_5[Menyimpan ke storage backend]
+    f_6[Mencatat metadata, versi, dan audit]
+    f_7[Mengembalikan konfirmasi status]
+  end
+
+  start --> ca_1
+  ca_1 --> ca_2
+  ca_2 --> ca_3
+  ca_3 --> f_1
+  f_1 --> f_2
+  f_2 --> f_3
+  f_3 --> f_4
+  f_4 --> f_5
+  f_5 --> f_6
+  f_6 --> f_7
+  f_7 --> approve</textarea>
+    </section>
+
+    <section class="pane pane-preview">
+      <div class="pane-label">Preview</div>
+      <div id="preview" class="preview" aria-label="Mermaid diagram preview"></div>
+      <div id="error" class="error" hidden></div>
+    </section>
+  </main>
+
+  <!-- ESM dari CDN: swimlane-beta lazy-chunk resolve ke jsDelivr, bukan file:// -->
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@12.3.0/dist/mermaid.esm.min.mjs";
+    window.mermaid = mermaid;
+    const script = document.createElement("script");
+    script.src = "app.js";
+    document.body.appendChild(script);
+  </script>
+</body>
+</html>
